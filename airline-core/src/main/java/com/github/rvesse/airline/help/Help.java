@@ -31,14 +31,13 @@ import com.github.rvesse.airline.utils.predicates.parser.AbbreviatedCommandFinde
 import com.github.rvesse.airline.utils.predicates.parser.AbbreviatedGroupFinder;
 import com.github.rvesse.airline.utils.predicates.parser.CommandFinder;
 import com.github.rvesse.airline.utils.predicates.parser.GroupFinder;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.Predicate;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Predicate;
 
 @Command(name = "help", description = "Display help information")
 public class Help<T> implements Runnable, Callable<Void> {
@@ -199,9 +198,9 @@ public class Help<T> implements Runnable, Callable<Void> {
 
         // A command in a group?
         CommandMetadata command;
-        CommandGroupMetadata group = CollectionUtils.find(global.getCommandGroups(), findGroupPredicate);
+        CommandGroupMetadata group = global.getCommandGroups().stream().filter(findGroupPredicate).findFirst().orElse(null);
         if (group != null) {
-            List<CommandGroupMetadata> groupPath = new ArrayList<CommandGroupMetadata>();
+            List<CommandGroupMetadata> groupPath = new ArrayList<>();
             groupPath.add(group);
 
             // General group help or specific group command help?
@@ -215,7 +214,7 @@ public class Help<T> implements Runnable, Callable<Void> {
                 int i = 1;
                 String commandOrSubGroupName = commandNames.get(i);
 
-                while (group.getSubGroups().size() > 0 && i < commandNames.size()) {
+                while (!group.getSubGroups().isEmpty() && i < commandNames.size()) {
                     commandOrSubGroupName = commandNames.get(i);
 
                     //@formatter:off
@@ -223,7 +222,10 @@ public class Help<T> implements Runnable, Callable<Void> {
                                          ? new AbbreviatedGroupFinder(commandOrSubGroupName, group.getSubGroups())
                                          : new GroupFinder(commandOrSubGroupName);
                     //@formatter:on
-                    CommandGroupMetadata subGroup = CollectionUtils.find(group.getSubGroups(), findGroupPredicate);
+                    CommandGroupMetadata subGroup = group.getSubGroups().stream()
+                            .filter(findGroupPredicate)
+                            .findFirst()
+                            .orElse(null);
                     if (subGroup != null) {
                         // Found a valid sub-group
                         groupPath.add(subGroup);
@@ -249,7 +251,10 @@ public class Help<T> implements Runnable, Callable<Void> {
                                        ? new AbbreviatedCommandFinder(commandOrSubGroupName, group.getCommands())
                                        : new CommandFinder(commandOrSubGroupName);
                 //@formatter:on
-                command = CollectionUtils.find(group.getCommands(), findCommandPredicate);
+                command = group.getCommands().stream()
+                        .filter(findCommandPredicate)
+                        .findFirst()
+                        .orElse(null);
                 if (command != null) {
                     new CliCommandUsageGenerator().usage(global.getName(), UsageHelper.toGroupNames(groupPath),
                             command.getName(), command, global.getParserConfiguration(), out);
@@ -272,7 +277,10 @@ public class Help<T> implements Runnable, Callable<Void> {
                                ? new AbbreviatedCommandFinder(name, global.getDefaultGroupCommands())
                                : new CommandFinder(name);
         //@formatter:on
-        command = CollectionUtils.find(global.getDefaultGroupCommands(), findCommandPredicate);
+        command = global.getDefaultGroupCommands().stream()
+                .filter(findCommandPredicate)
+                .findFirst()
+                .orElse(null);
         if (command != null) {
             // Command in default group help
             new CliCommandUsageGenerator(includeHidden).usage(global.getName(), null, command.getName(), command,

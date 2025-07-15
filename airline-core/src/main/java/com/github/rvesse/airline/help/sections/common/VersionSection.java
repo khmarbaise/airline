@@ -180,7 +180,10 @@ public class VersionSection implements HelpSection {
     }
 
     private static class VersionInfo {
-        public String component, version, build, date;
+        public String component;
+        public String version;
+        public String build;
+        public String date;
         public Map<String, String> additional = new HashMap<>();
 
         public String[] toList() {

@@ -15,11 +15,11 @@
  */
 package com.github.rvesse.airline.io.printers;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Stack;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Printer class for generating Troff output
@@ -85,7 +85,7 @@ public class TroffPrinter {
     private boolean newline = true;
     private boolean inSection = false;
     private final int indentation = DEFAULT_INDENTATION;
-    private Stack<ListType> lists = new Stack<ListType>();
+    private Stack<ListType> lists = new Stack<>();
     private final String listGlyph;
 
     public TroffPrinter(PrintWriter writer) {
@@ -130,7 +130,7 @@ public class TroffPrinter {
         if (StringUtils.isEmpty(value))
             return;
 
-        String[] lines = StringUtils.split(value, '\n');
+        String[] lines = value.split("\n");
         if (lines.length == 0)
             return;
         if (lines.length == 1) {

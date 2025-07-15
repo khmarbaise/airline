@@ -18,6 +18,7 @@ package com.github.rvesse.airline;
 import com.github.rvesse.airline.parser.ParserUtil;
 import com.github.rvesse.airline.parser.errors.ParseException;
 import com.github.rvesse.airline.utils.AirlineUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

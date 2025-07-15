@@ -42,8 +42,7 @@
   </distributionManagement>
 
   <properties>
-    <jdk.target>11</jdk.target>
-    <jdk.enforced>11</jdk.enforced>
+    <maven.compiler.release>11</maven.compiler.release>
     <license.header.path>${project.basedir}</license.header.path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -130,45 +129,195 @@
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.5.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.4.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.14.0</version>
+          <configuration>
+            <compilerArgs>
+              <arg>-Xlint:all</arg>
+              <arg>-Xlint:-processing</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.5.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.5.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-help-plugin</artifactId>
+          <version>3.5.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>3.1.1</version>
+          <configuration>
+            <pushChanges>false</pushChanges>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${plugin.gpg}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${plugin.source}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${plugin.enforcer}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${plugin.javadoc}</version>
+          <configuration>
+            <javadocVersion>${maven.compiler.release}</javadocVersion>
+            <quiet>true</quiet>
+            <additionalOptions>
+              <option>-Xdoclint:none</option>
+            </additionalOptions>
+          </configuration>
+        </plugin>
+
+
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>${plugin.license}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>buildnumber-maven-plugin</artifactId>
+          <version>${plugin.buildnumber}</version>
+          <configuration>
+            <doUpdate>false</doUpdate>
+            <timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${plugin.jacoco}</version>
+          <configuration>
+            <rules>
+              <rule>
+                <element>BUNDLE</element>
+                <limits>
+                  <limit>
+                    <counter>CLASS</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>0.75</minimum>
+                  </limit>
+                  <limit>
+                    <counter>INSTRUCTION</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>0.75</minimum>
+                  </limit>
+                  <limit>
+                    <counter>METHOD</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>0.75</minimum>
+                  </limit>
+                  <limit>
+                    <counter>BRANCH</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>0.75</minimum>
+                  </limit>
+                  <limit>
+                    <counter>LINE</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>0.75</minimum>
+                  </limit>
+                  <limit>
+                    <counter>COMPLEXITY</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>0.75</minimum>
+                  </limit>
+                </limits>
+              </rule>
+            </rules>
+            <haltOnFailure>false</haltOnFailure>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>${plugin.central}</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+            <autoPublish>true</autoPublish>
+            <waitUntil>published</waitUntil>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
-      <!-- Compiler Plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${plugin.compiler}</version>
-        <configuration>
-          <source>11</source>
-          <target>${jdk.target}</target>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-
-      <!-- Surefire Plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${plugin.surefire}</version>
-      </plugin>
-
-      <!-- JAR Plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${plugin.jar}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- Enforcer Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>${plugin.enforcer}</version>
         <executions>
           <execution>
             <id>enforce-required-jdk</id>
@@ -178,7 +327,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>${jdk.enforced}</version>
+                  <version>${maven.compiler.release}</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -229,7 +378,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>${plugin.buildnumber}</version>
         <executions>
           <execution>
             <phase>validate</phase>
@@ -238,98 +386,24 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <doUpdate>false</doUpdate>
-          <timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
-        </configuration>
       </plugin>
 
       <!-- Code Coverage Plugins -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${plugin.jacoco}</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
-            <phase>process-test-classes</phase>
             <goals>
               <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>package</phase>
-            <goals>
               <goal>report</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>check</id>
-            <phase>package</phase>
-            <goals>
               <goal>check</goal>
             </goals>
-            <configuration>
-              <rules>
-                <rule>
-                  <element>BUNDLE</element>
-                  <limits>
-                    <limit>
-                      <counter>CLASS</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.75</minimum>
-                    </limit>
-                    <limit>
-                      <counter>INSTRUCTION</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.75</minimum>
-                    </limit>
-                    <limit>
-                      <counter>METHOD</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.75</minimum>
-                    </limit>
-                    <limit>
-                      <counter>BRANCH</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.75</minimum>
-                    </limit>
-                    <limit>
-                      <counter>LINE</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.75</minimum>
-                    </limit>
-                    <limit>
-                      <counter>COMPLEXITY</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.75</minimum>
-                    </limit>
-                  </limits>
-                </rule>
-              </rules>
-              <haltOnFailure>false</haltOnFailure>
-            </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
-
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>${plugin.antrun}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>${plugin.assembly}</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
   <profiles>
@@ -386,21 +460,10 @@
       </modules>
       <build>
         <plugins>
-          <!-- Release Plugin -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <version>${plugin.release}</version>
-            <configuration>
-              <pushChanges>false</pushChanges>
-            </configuration>
-          </plugin>
-
           <!-- GPG Plugin for Signing -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>${plugin.gpg}</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -416,7 +479,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>${plugin.source}</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -430,54 +492,26 @@
           </plugin>
 
           <!-- Javadoc Plugin -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>${plugin.javadoc}</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <javadocVersion>${jdk.target}</javadocVersion>
-              <quiet>true</quiet>
-              <additionalOptions>
-                <option>-Xdoclint:none</option>
-              </additionalOptions>
-            </configuration>
-          </plugin>
-
-          <!-- Central Publishing Plugin -->
-          <plugin>
-            <groupId>org.sonatype.central</groupId>
-            <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>${plugin.central}</version>
-            <extensions>true</extensions>
-            <configuration>
-              <publishingServerId>central</publishingServerId>
-              <autoPublish>true</autoPublish>
-              <waitUntil>published</waitUntil>
-            </configuration>
-          </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <javadocVersion>${jdk.target}</javadocVersion>
+                    <quiet>true</quiet>
+                    <additionalOptions>
+                        <option>-Xdoclint:none</option>
+                    </additionalOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
       </build>
     </profile>
   </profiles>
-
-  <repositories>
-    <repository>
-      <id>apache-repo-snapshots</id>
-      <url>https://repository.apache.org/content/repositories/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 </project>

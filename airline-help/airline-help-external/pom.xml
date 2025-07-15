@@ -27,12 +27,12 @@
     </dependency>
 
     <!-- Test Dependencies -->
-    <dependency>
-      <groupId>com.github.rvesse</groupId>
-      <artifactId>airline</artifactId>
-      <classifier>tests</classifier>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.github.rvesse</groupId>-->
+<!--      <artifactId>airline</artifactId>-->
+<!--      <classifier>tests</classifier>-->
+<!--      <version>${project.version}</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
   </dependencies>
 </project>

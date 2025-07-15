@@ -83,7 +83,7 @@ public class Debug implements ExampleRunnable {
         System.out.println();
         System.out.println("Scanning...");
         ClassGraph graph = new ClassGraph();
-        if (this.modules.size() > 0) {
+        if (!this.modules.isEmpty()) {
             graph = graph.acceptModules(this.modules.toArray(new String[modules.size()]));
             System.out.println("Scanning specified modules: ");
             for (String module : modules) {
