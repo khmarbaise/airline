@@ -248,18 +248,9 @@ public class AbstractUsageGenerator {
     }
 
     protected String toDescription(ArgumentsMetadata arguments) {
-        List<String> descriptionTitles = arguments.getTitle();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String title : descriptionTitles) {
-            if (stringBuilder.length() > 0) {
-                stringBuilder.append(" ");
-            }
-            stringBuilder.append("<");
-            stringBuilder.append(title);
-            stringBuilder.append(">");
-        }
-
-        return stringBuilder.toString();
+        return arguments.getTitle().stream()
+                .map(s -> "<" + s +  ">")
+                .collect(Collectors.joining(" "));
     }
 
     protected String toDescription(OptionMetadata option) {

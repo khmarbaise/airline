@@ -15,6 +15,12 @@
  */
 package com.github.rvesse.airline.model;
 
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.github.rvesse.airline.Accessor;
 import com.github.rvesse.airline.annotations.OptionType;
 import com.github.rvesse.airline.restrictions.OptionRestriction;
@@ -22,13 +28,6 @@ import com.github.rvesse.airline.types.DefaultTypeConverterProvider;
 import com.github.rvesse.airline.types.TypeConverterProvider;
 import com.github.rvesse.airline.utils.AirlineUtils;
 import com.github.rvesse.airline.utils.predicates.restrictions.IsRequiredOptionFinder;
-
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.SetUtils;
 
@@ -103,7 +102,7 @@ public class OptionMetadata {
         this.restrictions = option.restrictions;
         this.provider = option.provider;
 
-        Set<Accessor> accessors = new LinkedHashSet<Accessor>();
+        Set<Accessor> accessors = new LinkedHashSet<>();
         for (OptionMetadata other : options) {
             if (!option.equals(other))
                 throw new IllegalArgumentException(

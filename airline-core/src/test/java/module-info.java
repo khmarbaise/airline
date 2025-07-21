@@ -23,6 +23,8 @@ module com.github.rvesse.airline.tests
   requires org.testng;
   requires jakarta.inject;
   requires javax.inject;
+  requires org.mockito;
+  requires org.assertj.core;
 
   // Exported packages
   exports com.github.rvesse.airline.tests;
@@ -51,4 +53,5 @@ module com.github.rvesse.airline.tests
   opens com.github.rvesse.airline.tests.restrictions.ranges;
   opens com.github.rvesse.airline.tests.sections;
   opens com.github.rvesse.airline.tests.types;
+
 }

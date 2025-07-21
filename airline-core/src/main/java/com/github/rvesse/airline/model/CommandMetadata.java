@@ -94,7 +94,7 @@ public class CommandMetadata {
     }
 
     public List<OptionMetadata> getAllOptions() {
-        List<OptionMetadata> allOptions = new ArrayList<OptionMetadata>();
+        List<OptionMetadata> allOptions = new ArrayList<>();
         allOptions.addAll(globalOptions);
         allOptions.addAll(groupOptions);
         allOptions.addAll(commandOptions);

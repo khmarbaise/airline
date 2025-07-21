@@ -27,10 +27,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.IteratorUtils;
-import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.Predicate;
 
 public class AirlineUtils {
@@ -76,13 +76,13 @@ public class AirlineUtils {
     }
 
     public static <K, V> Map<K, V> singletonMap(K key, V value) {
-        Map<K, V> map = new HashMap<K, V>();
+        Map<K, V> map = new HashMap<>();
         map.put(key, value);
         return map;
     }
 
     public static <T> Set<T> intersection(Set<T> a, Set<T> b) {
-        Set<T> intersection = new HashSet<T>();
+        Set<T> intersection = new HashSet<>();
         for (T item : a) {
             if (b.contains(item))
                 intersection.add(item);
@@ -92,14 +92,14 @@ public class AirlineUtils {
 
     public static <T> List<T> listCopy(Collection<T> collection) {
         if (collection == null)
-            return new ArrayList<T>();
-        return new ArrayList<T>(collection);
+            return new ArrayList<>();
+        return new ArrayList<>(collection);
     }
 
     public static <T> List<T> listCopy(Iterable<T> iterable) {
         if (iterable == null)
-            return new ArrayList<T>();
-        return IteratorUtils.toList(iterable.iterator());
+            return new ArrayList<>();
+        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
     public static <T> List<T> unmodifiableListCopy(Collection<T> collection) {
@@ -111,7 +111,8 @@ public class AirlineUtils {
     public static <T> List<T> unmodifiableListCopy(Iterable<T> iterable) {
         if (iterable == null)
             return Collections.emptyList();
-        return List.copyOf(IteratorUtils.toList(iterable.iterator()));
+        return List.copyOf(StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toList()));
     }
 
     public static <T> List<T> unmodifiableListCopy(T[] array) {
@@ -129,18 +130,14 @@ public class AirlineUtils {
     public static <T> Set<T> unmodifiableSetCopy(Iterable<T> iterable) {
         if (iterable == null)
             return Collections.emptySet();
-        LinkedHashSet<T> set = new LinkedHashSet<T>();
-        Iterator<T> iter = iterable.iterator();
-        while (iter.hasNext()) {
-            set.add(iter.next());
-        }
-        return Collections.unmodifiableSet(set);
+        return Set.copyOf(StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toCollection(LinkedHashSet::new)));
     }
 
     public static <T> Set<T> unmodifiableSetCopy(Set<T> set) {
         if (set == null)
             return Collections.emptySet();
-        return Collections.unmodifiableSet(new LinkedHashSet<T>(set));
+        return Set.copyOf(new LinkedHashSet<>(set));
     }
 
     public static <T> T find(Iterable<T> collection, Predicate<T> predicate, T defaultValue) {

@@ -15,14 +15,14 @@
  */
 package com.github.rvesse.airline.help.suggester;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.rvesse.airline.annotations.AirlineModule;
 import com.github.rvesse.airline.model.CommandGroupMetadata;
 import com.github.rvesse.airline.model.CommandMetadata;
 import com.github.rvesse.airline.model.GlobalMetadata;
 import com.github.rvesse.airline.model.OptionMetadata;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GlobalSuggester<T>
     implements Suggester
@@ -33,7 +33,7 @@ public class GlobalSuggester<T>
     @Override
     public Iterable<String> suggest()
     {
-        List<String> suggestions = new ArrayList<String>();
+        List<String> suggestions = new ArrayList<>();
         for (CommandGroupMetadata group : metadata.getCommandGroups()) {
             suggestions.add(group.getName());
         }
