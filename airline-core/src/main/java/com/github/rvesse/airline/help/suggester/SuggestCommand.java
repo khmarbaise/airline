@@ -24,7 +24,6 @@ import com.github.rvesse.airline.model.*;
 import com.github.rvesse.airline.parser.ParseState;
 import com.github.rvesse.airline.parser.suggester.SuggestionParser;
 import com.github.rvesse.airline.utils.AirlineUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -33,13 +32,11 @@ import static com.github.rvesse.airline.parser.ParserUtil.createInstance;
 
 @Command(name = "suggest")
 public class SuggestCommand<T> implements Runnable, Callable<Void> {
-    private static final Map<Context, Class<? extends Suggester>> BUILTIN_SUGGESTERS = new HashMap<>();
-
-    static {
-        BUILTIN_SUGGESTERS.put(Context.GLOBAL, GlobalSuggester.class);
-        BUILTIN_SUGGESTERS.put(Context.GROUP, GroupSuggester.class);
-        BUILTIN_SUGGESTERS.put(Context.COMMAND, CommandSuggester.class);
-    }
+    private static final Map<Context, Class<? extends Suggester>> BUILTIN_SUGGESTERS = Map.ofEntries(
+            Map.entry(Context.GLOBAL, GlobalSuggester.class),
+            Map.entry(Context.GROUP, GroupSuggester.class),
+            Map.entry(Context.COMMAND, CommandSuggester.class)
+    );
 
     @AirlineModule
     public GlobalMetadata<T> metadata;
@@ -48,34 +45,34 @@ public class SuggestCommand<T> implements Runnable, Callable<Void> {
     public List<String> arguments = new ArrayList<>();
 
     public Iterable<String> generateSuggestions() {
-        SuggestionParser<T> parser = new SuggestionParser<T>();
+        SuggestionParser<T> parser = new SuggestionParser<>();
         ParseState<T> state = parser.parse(metadata, arguments);
 
         Class<? extends Suggester> suggesterClass = BUILTIN_SUGGESTERS.get(state.getLocation());
-        if (suggesterClass != null) {
-            SuggesterMetadata suggesterMetadata =
-                    MetadataLoader.loadSuggester(suggesterClass, MetadataLoader.loadParser(
-                            this.getClass()));
+        if (suggesterClass == null) {
+            return Collections.emptyList();
+        }
+        SuggesterMetadata suggesterMetadata =
+                MetadataLoader.loadSuggester(suggesterClass, MetadataLoader.loadParser(
+                        this.getClass()));
 
-            if (suggesterMetadata != null) {
-                Map<Class<?>, Object> bindings = new HashMap<Class<?>, Object>();
-                bindings.put(GlobalMetadata.class, metadata);
+        if (suggesterMetadata != null) {
+            Map<Class<?>, Object> bindings = new HashMap<>(Map.of(GlobalMetadata.class, metadata));
 
-                if (state.getGroup() != null) {
-                    bindings.put(CommandGroupMetadata.class, state.getGroup());
-                }
-
-                if (state.getCommand() != null) {
-                    bindings.put(CommandMetadata.class, state.getCommand());
-                }
-
-                Suggester suggester = createInstance(suggesterMetadata.getSuggesterClass(),
-                                                     Collections.<OptionMetadata>emptyList(), null, null, null,
-                                                     suggesterMetadata.getMetadataInjections(),
-                                                     AirlineUtils.unmodifiableMapCopy(bindings));
-
-                return suggester.suggest();
+            if (state.getGroup() != null) {
+                bindings.put(CommandGroupMetadata.class, state.getGroup());
             }
+
+            if (state.getCommand() != null) {
+                bindings.put(CommandMetadata.class, state.getCommand());
+            }
+
+            Suggester suggester = createInstance(suggesterMetadata.getSuggesterClass(),
+                                                 Collections.emptyList(), null, null, null,
+                                                 suggesterMetadata.getMetadataInjections(),
+                                                 AirlineUtils.unmodifiableMapCopy(bindings));
+
+            return suggester.suggest();
         }
 
         return Collections.emptyList();
@@ -83,7 +80,7 @@ public class SuggestCommand<T> implements Runnable, Callable<Void> {
 
     @Override
     public void run() {
-        Channels.output().println(StringUtils.join(generateSuggestions(), '\n'));
+        Channels.output().println(String.join("\n", generateSuggestions()));
     }
 
     @Override

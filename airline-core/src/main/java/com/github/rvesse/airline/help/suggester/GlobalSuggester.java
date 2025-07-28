@@ -33,7 +33,7 @@ public class GlobalSuggester<T>
     @Override
     public Iterable<String> suggest()
     {
-        List<String> suggestions = new ArrayList<String>();
+        List<String> suggestions = new ArrayList<>();
         for (CommandGroupMetadata group : metadata.getCommandGroups()) {
             suggestions.add(group.getName());
         }
